@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Mon Espace Apprenant</title></head>
+<body>
+<div layout:fragment="content">
+<div class="container">
+
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+             style="width:56px;height:56px;font-size:1.4rem;">
+            <i class="bi bi-person-fill"></i>
+        </div>
+        <div>
+            <h2 class="fw-bold mb-0">Bonjour, <span th:text="${apprenant.prenom}">Prénom</span> !</h2>
+            <p class="text-muted mb-0">Votre espace apprenant</p>
+        </div>
+    </div>
+
+    <!-- Stats rapides -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-4">
+            <div class="card border-0 bg-primary text-white text-center p-3">
+                <div class="fs-2 fw-bold" th:text="${progressions.size()}">0</div>
+                <div class="small">Cours suivis</div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card border-0 bg-success text-white text-center p-3">
+                <div class="fs-2 fw-bold"
+                     th:text="${progressions.stream().filter(p -> p.statut == 'TERMINE').count()}">0</div>
+                <div class="small">Cours terminés</div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card border-0 bg-info text-white text-center p-3">
+                <div class="fs-2 fw-bold" th:text="${resultats.size()}">0</div>
+                <div class="small">Quiz passés</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mes cours et progression -->
+    <h4 class="fw-bold mb-3"><i class="bi bi-book me-2"></i>Mes cours</h4>
+    <div th:if="${progressions.isEmpty()}" class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>Vous n'êtes inscrit à aucun cours.
+        <a th:href="@{/catalogue}" class="alert-link">Parcourir le catalogue</a>
+    </div>
+
+    <div class="row g-3 mb-5">
+        <div class="col-md-6" th:each="prog : ${progressions}">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="fw-bold mb-0" th:text="${prog.coursTitre}">Cours</h6>
+                        <span class="badge"
+                              th:classappend="${prog.statut == 'TERMINE'} ? 'bg-success' :
+                                             (${prog.statut == 'ABANDONNE'} ? 'bg-secondary' : 'bg-primary')"
+                              th:text="${prog.statut}">Statut</span>
+                    </div>
+                    <div class="progress mb-2" style="height:10px;">
+                        <div class="progress-bar bg-success" role="progressbar"
+                             th:style="'width:' + ${prog.pourcentage} + '%'"
+                             th:text="${prog.pourcentage} + '%'">0%</div>
+                    </div>
+                    <small class="text-muted"
+                           th:text="${prog.leconsCompletees} + ' / ' + ${prog.totalLecons} + ' leçons complétées'"></small>
+                    <div class="mt-3">
+                        <a th:href="@{/apprenant/cours/{id}(id=${prog.coursId})}"
+                           class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-play-circle me-1"></i>Continuer
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Résultats quiz -->
+    <h4 class="fw-bold mb-3"><i class="bi bi-patch-question me-2"></i>Mes résultats de quiz</h4>
+    <div th:if="${resultats.isEmpty()}" class="text-muted">Aucun quiz passé pour le moment.</div>
+    <div class="table-responsive" th:if="${!resultats.isEmpty()}">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Quiz</th>
+                    <th>Score</th>
+                    <th>Pourcentage</th>
+                    <th>Date</th>
+                    <th>Résultat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="r : ${resultats}">
+                    <td th:text="${r.quiz.titre}">Quiz</td>
+                    <td th:text="${r.score} + ' / ' + ${r.totalQuestions}">0/0</td>
+                    <td>
+                        <div class="progress" style="height:8px;width:100px;">
+                            <div class="progress-bar"
+                                 th:classappend="${r.pourcentage >= 60} ? 'bg-success' : 'bg-danger'"
+                                 th:style="'width:' + ${r.pourcentage} + '%'"></div>
+                        </div>
+                        <small th:text="${#numbers.formatDecimal(r.pourcentage, 1, 1)} + '%'"></small>
+                    </td>
+                    <td th:text="${#temporals.format(r.datePassage, 'dd/MM/yyyy')}">Date</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${r.pourcentage >= 60} ? 'bg-success' : 'bg-danger'"
+                              th:text="${r.pourcentage >= 60} ? 'Réussi' : 'Échec'">-</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</div>
+</body>
+</html>

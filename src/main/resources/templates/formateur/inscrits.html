@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Apprenants inscrits</title></head>
+<body>
+<div layout:fragment="content">
+<div class="container">
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/formateur/dashboard}">Mon espace</a></li>
+            <li class="breadcrumb-item active" th:text="${cours.titre}">Cours</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-0" th:text="${cours.titre}">Cours</h3>
+            <p class="text-muted mb-0">
+                <span th:text="${inscrits.size()}">0</span> apprenant(s) inscrit(s)
+            </p>
+        </div>
+    </div>
+
+    <div th:if="${inscrits.isEmpty()}" class="alert alert-info">
+        Aucun apprenant inscrit à ce cours pour le moment.
+    </div>
+
+    <div class="table-responsive" th:if="${!inscrits.isEmpty()}">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Apprenant</th>
+                    <th>Email</th>
+                    <th>Date inscription</th>
+                    <th>Statut</th>
+                    <th>Progression</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="data, i : ${progressions}">
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                 style="width:36px;height:36px;font-size:0.85rem;"
+                                 th:text="${data[0].prenom.charAt(0)}">A</div>
+                            <span th:text="${data[0].nomComplet}">Nom</span>
+                        </div>
+                    </td>
+                    <td class="text-muted small" th:text="${data[0].email}">email</td>
+                    <td th:text="${inscrits[__${i.index}__].dateInscription}">Date</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${data[1].name() == 'TERMINE'} ? 'bg-success' :
+                                             (${data[1].name() == 'ABANDONNE'} ? 'bg-secondary' : 'bg-primary')"
+                              th:text="${data[1]}">Statut</span>
+                    </td>
+                    <td style="min-width:140px;">
+                        <div class="progress" style="height:8px;">
+                            <div class="progress-bar bg-success"
+                                 th:style="'width:' + ${data[2]} + '%'"></div>
+                        </div>
+                        <small class="text-muted" th:text="${data[2]} + '%'">0%</small>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</div>
+</body>
+</html>

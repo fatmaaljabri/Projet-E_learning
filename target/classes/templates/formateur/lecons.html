@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Gestion des Leçons</title></head>
+<body>
+<div layout:fragment="content">
+<div class="container">
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/formateur/dashboard}">Mon espace</a></li>
+            <li class="breadcrumb-item">
+                <a th:href="@{/formateur/cours/{id}/modules(id=${module.cours.id})}"
+                   th:text="${module.cours.titre}">Cours</a>
+            </li>
+            <li class="breadcrumb-item active" th:text="${module.titre}">Module</li>
+        </ol>
+    </nav>
+
+    <h3 class="fw-bold mb-1" th:text="${module.titre}">Module</h3>
+    <p class="text-muted mb-4" th:text="${module.description}">Description</p>
+
+    <div class="row g-4">
+        <!-- Liste des leçons -->
+        <div class="col-lg-7">
+            <h5 class="fw-bold mb-3"><i class="bi bi-file-text me-2"></i>Leçons</h5>
+            <div th:if="${lecons.isEmpty()}" class="alert alert-info">Aucune leçon. Ajoutez la première.</div>
+
+            <div class="card border-0 shadow-sm mb-2" th:each="lecon : ${lecons}">
+                <div class="card-body py-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <span class="badge bg-secondary me-2" th:text="${lecon.ordre}">1</span>
+                            <strong th:text="${lecon.titre}">Leçon</strong>
+                            <span class="badge bg-light text-muted ms-2"
+                                  th:text="${lecon.dureeMin} + ' min'"></span>
+                            <p class="text-muted small mt-1 mb-0"
+                               th:text="${#strings.abbreviate(lecon.contenu, 100)}">Contenu...</p>
+                        </div>
+                        <form th:action="@{/formateur/lecons/{id}/supprimer(id=${lecon.id})}"
+                              method="post" onsubmit="return confirm('Supprimer cette leçon ?')">
+                            <input type="hidden" name="moduleId" th:value="${module.id}"/>
+                            <button class="btn btn-sm btn-outline-danger ms-2">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire ajout leçon -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Ajouter une leçon</h6>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/formateur/modules/{id}/lecons/nouveau(id=${module.id})}"
+                          method="post" th:object="${nouvelleLecon}">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Titre de la leçon</label>
+                            <input type="text" class="form-control" th:field="*{titre}"
+                                   placeholder="Ex: Introduction, Chapitre 1..." required/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Contenu</label>
+                            <textarea class="form-control" th:field="*{contenu}" rows="4"
+                                      placeholder="Contenu de la leçon..."></textarea>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold">Ordre</label>
+                                <input type="number" class="form-control" th:field="*{ordre}"
+                                       min="1" th:value="${lecons.size() + 1}" required/>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-semibold">Durée (min)</label>
+                                <input type="number" class="form-control" th:field="*{dureeMin}"
+                                       min="1" value="10"/>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-plus me-1"></i>Ajouter la leçon
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+</body>
+</html>

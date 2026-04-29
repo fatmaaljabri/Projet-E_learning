@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/main}">
+<head><title th:text="${cours.titre}">Détail cours</title></head>
+<body>
+<div layout:fragment="content">
+<div class="container">
+
+    <div class="row g-4">
+        <!-- Colonne principale -->
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/catalogue}">Catalogue</a></li>
+                    <li class="breadcrumb-item active" th:text="${cours.titre}">Cours</li>
+                </ol>
+            </nav>
+
+            <img th:src="${cours.imageUrl != null ? cours.imageUrl : 'https://placehold.co/800x300/4f46e5/white?text='+cours.titre}"
+                 class="img-fluid rounded mb-4 w-100" alt="Image du cours"
+                 style="max-height:300px;object-fit:cover;"/>
+
+            <h1 class="fw-bold" th:text="${cours.titre}">Titre</h1>
+            <p class="text-muted" th:text="${cours.description}">Description</p>
+
+            <!-- Modules & Leçons -->
+            <h4 class="mt-4 mb-3 fw-bold"><i class="bi bi-list-check me-2"></i>Contenu du cours</h4>
+            <div class="accordion" id="accordionModules">
+                <div class="accordion-item border mb-2 rounded" th:each="module, mStat : ${cours.modules}">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-semibold" type="button"
+                                data-bs-toggle="collapse"
+                                th:attr="data-bs-target='#module' + ${module.id}">
+                            <i class="bi bi-folder2 me-2 text-primary"></i>
+                            <span th:text="${module.ordre + '. ' + module.titre}">Module</span>
+                            <span class="badge bg-secondary ms-2"
+                                  th:text="${module.lecons.size()} + ' leçons'"></span>
+                        </button>
+                    </h2>
+                    <div class="accordion-collapse collapse" th:id="'module' + ${module.id}">
+                        <div class="accordion-body p-0">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item ps-4"
+                                    th:each="lecon : ${module.lecons}">
+                                    <i class="bi bi-play-circle me-2 text-success"></i>
+                                    <span th:text="${lecon.ordre + '. ' + lecon.titre}">Leçon</span>
+                                    <span class="badge bg-light text-muted ms-2"
+                                          th:text="${lecon.dureeMin} + ' min'"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="card shadow border-0 sticky-top" style="top:80px">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <span class="badge bg-primary fs-6" th:text="${cours.niveau}">Niveau</span>
+                    </div>
+                    <ul class="list-unstyled text-start mb-3">
+                        <li class="mb-2">
+                            <i class="bi bi-person-badge me-2 text-primary"></i>
+                            <strong>Formateur :</strong>
+                            <span th:text="${cours.formateur.nomComplet}">Nom</span>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-collection me-2 text-primary"></i>
+                            <strong>Modules :</strong>
+                            <span th:text="${cours.modules.size()}">0</span>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-file-text me-2 text-primary"></i>
+                            <strong>Leçons :</strong>
+                            <span th:text="${cours.nombreLecons}">0</span>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-people me-2 text-primary"></i>
+                            <strong>Inscrits :</strong>
+                            <span th:text="${cours.nombreInscrits}">0</span>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-tag me-2 text-primary"></i>
+                            <strong>Catégorie :</strong>
+                            <span th:text="${cours.categorie}">Cat</span>
+                        </li>
+                    </ul>
+
+                    <!-- Bouton selon statut -->
+                    <div th:if="${estInscrit}">
+                        <a th:href="@{/apprenant/cours/{id}(id=${cours.id})}"
+                           class="btn btn-success w-100 btn-lg">
+                            <i class="bi bi-play-fill me-2"></i>Continuer le cours
+                        </a>
+                    </div>
+                    <div th:if="${!estInscrit}" sec:authorize="hasRole('APPRENANT')">
+                        <form th:action="@{/apprenant/inscrire/{id}(id=${cours.id})}" method="post">
+                            <button type="submit" class="btn btn-primary w-100 btn-lg">
+                                <i class="bi bi-plus-circle me-2"></i>S'inscrire gratuitement
+                            </button>
+                        </form>
+                    </div>
+                    <div sec:authorize="isAnonymous()">
+                        <a th:href="@{/auth/login}" class="btn btn-outline-primary w-100 btn-lg">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter pour s'inscrire
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Espace Formateur</title></head>
+<body>
+<div layout:fragment="content">
+<div class="container">
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center">
+            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                 style="width:56px;height:56px;font-size:1.4rem;">
+                <i class="bi bi-easel-fill"></i>
+            </div>
+            <div>
+                <h2 class="fw-bold mb-0">Bonjour, <span th:text="${formateur.prenom}">Prénom</span> !</h2>
+                <p class="text-muted mb-0">Espace Formateur</p>
+            </div>
+        </div>
+        <a th:href="@{/formateur/cours/nouveau}" class="btn btn-success">
+            <i class="bi bi-plus-circle me-1"></i>Nouveau cours
+        </a>
+    </div>
+
+    <!-- Stat -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-4">
+            <div class="card border-0 bg-success text-white text-center p-3">
+                <div class="fs-2 fw-bold" th:text="${totalCours}">0</div>
+                <div class="small">Mes cours</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des cours -->
+    <h4 class="fw-bold mb-3"><i class="bi bi-collection me-2"></i>Mes cours récents</h4>
+    <div th:if="${cours.isEmpty()}" class="alert alert-info">
+        Vous n'avez pas encore créé de cours.
+        <a th:href="@{/formateur/cours/nouveau}" class="alert-link">Créer mon premier cours</a>
+    </div>
+
+    <div class="table-responsive" th:if="${!cours.isEmpty()}">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Titre</th>
+                    <th>Niveau</th>
+                    <th>Modules</th>
+                    <th>Inscrits</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="c : ${cours.content}">
+                    <td class="fw-semibold" th:text="${c.titre}">Titre</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${c.niveau.name() == 'DEBUTANT'} ? 'bg-success' :
+                                             (${c.niveau.name() == 'INTERMEDIAIRE'} ? 'bg-warning text-dark' : 'bg-danger')"
+                              th:text="${c.niveau}">Niveau</span>
+                    </td>
+                    <td th:text="${c.modules.size()}">0</td>
+                    <td th:text="${c.nombreInscrits}">0</td>
+                    <td>
+                        <span th:if="${c.actif}" class="badge bg-success">Actif</span>
+                        <span th:unless="${c.actif}" class="badge bg-secondary">Inactif</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/formateur/cours/{id}/modules(id=${c.id})}"
+                           class="btn btn-sm btn-outline-primary me-1">
+                            <i class="bi bi-collection"></i>
+                        </a>
+                        <a th:href="@{/formateur/cours/{id}/inscrits(id=${c.id})}"
+                           class="btn btn-sm btn-outline-info me-1">
+                            <i class="bi bi-people"></i>
+                        </a>
+                        <a th:href="@{/formateur/cours/{id}/modifier(id=${c.id})}"
+                           class="btn btn-sm btn-outline-warning me-1">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form th:action="@{/formateur/cours/{id}/supprimer(id=${c.id})}" method="post"
+                              style="display:inline"
+                              onsubmit="return confirm('Supprimer ce cours ?')">
+                            <button class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</div>
+</body>
+</html>

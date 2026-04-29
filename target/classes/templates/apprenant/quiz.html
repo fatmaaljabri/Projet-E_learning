@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title th:text="${quiz.titre}">Quiz</title></head>
+<body>
+<div layout:fragment="content">
+<div class="container" style="max-width:760px;">
+
+    <div class="text-center mb-4">
+        <i class="bi bi-patch-question-fill text-warning fs-1"></i>
+        <h2 class="fw-bold mt-2" th:text="${quiz.titre}">Quiz</h2>
+        <p class="text-muted">
+            <span th:text="${questions.size()}">0</span> questions — Répondez à chacune
+        </p>
+    </div>
+
+    <form th:action="@{/apprenant/quiz/{id}/soumettre(id=${quiz.id})}" method="post">
+        <div class="card border-0 shadow-sm mb-3"
+             th:each="question, qStat : ${questions}">
+            <div class="card-body">
+                <p class="fw-bold mb-3">
+                    <span class="badge bg-primary me-2" th:text="${qStat.count}">1</span>
+                    <span th:text="${question.enonce}">Énoncé</span>
+                </p>
+                <div class="row g-2">
+                    <div class="col-md-6" th:each="choix : ${ {'A','B','C','D'} }">
+                        <div class="form-check border rounded p-3 h-100 choix-option">
+                            <input class="form-check-input" type="radio"
+                                   th:name="'question_' + ${question.id}"
+                                   th:value="${choix}"
+                                   th:id="'q' + ${question.id} + '_' + ${choix}"
+                                   required/>
+                            <label class="form-check-label w-100"
+                                   th:for="'q' + ${question.id} + '_' + ${choix}">
+                                <strong th:text="${choix} + ')'"></strong>
+                                <span th:text="${choix == 'A'} ? ${question.choixA} :
+                                               (${choix == 'B'} ? ${question.choixB} :
+                                               (${choix == 'C'} ? ${question.choixC} : ${question.choixD}))"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-warning btn-lg fw-bold px-5">
+                <i class="bi bi-send-check me-2"></i>Soumettre le quiz
+            </button>
+        </div>
+    </form>
+
+</div>
+</div>
+
+<style>
+.choix-option:has(input:checked) { background-color: #e8f4fd; border-color: #0d6efd !important; }
+.choix-option { cursor: pointer; transition: all 0.2s; }
+.choix-option:hover { background-color: #f8f9fa; }
+</style>
+</body>
+</html>

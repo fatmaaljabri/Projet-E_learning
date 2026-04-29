@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Gestion des Modules</title></head>
+<body>
+<div layout:fragment="content">
+<div class="container">
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/formateur/dashboard}">Mon espace</a></li>
+            <li class="breadcrumb-item active" th:text="${cours.titre}">Cours</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0" th:text="${cours.titre}">Titre du cours</h3>
+        <a th:href="@{/formateur/cours/{id}/modifier(id=${cours.id})}"
+           class="btn btn-outline-warning btn-sm">
+            <i class="bi bi-pencil me-1"></i>Modifier le cours
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Liste des modules -->
+        <div class="col-lg-7">
+            <h5 class="fw-bold mb-3"><i class="bi bi-folder2 me-2"></i>Modules</h5>
+            <div th:if="${modules.isEmpty()}" class="alert alert-info">
+                Aucun module créé. Ajoutez votre premier module ci-contre.
+            </div>
+
+            <div class="card border-0 shadow-sm mb-3" th:each="module : ${modules}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="badge bg-secondary me-2" th:text="${module.ordre}">1</span>
+                            <strong th:text="${module.titre}">Module</strong>
+                            <p class="text-muted small mt-1 mb-0" th:text="${module.description}">Description</p>
+                        </div>
+                        <div class="d-flex gap-1">
+                            <a th:href="@{/formateur/modules/{id}/lecons(id=${module.id})}"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-list-ul me-1"></i>Leçons
+                                <span class="badge bg-primary ms-1" th:text="${module.lecons.size()}">0</span>
+                            </a>
+                            <form th:action="@{/formateur/modules/{id}/supprimer(id=${module.id})}"
+                                  method="post" onsubmit="return confirm('Supprimer ce module et ses leçons ?')">
+                                <input type="hidden" name="coursId" th:value="${cours.id}"/>
+                                <button class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire ajout module -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Ajouter un module</h6>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/formateur/cours/{id}/modules/nouveau(id=${cours.id})}"
+                          method="post" th:object="${nouveauModule}">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Titre du module</label>
+                            <input type="text" class="form-control" th:field="*{titre}"
+                                   placeholder="Ex: Introduction, Partie 1..." required/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description</label>
+                            <textarea class="form-control" th:field="*{description}" rows="2"
+                                      placeholder="Objectifs du module..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Ordre</label>
+                            <input type="number" class="form-control" th:field="*{ordre}"
+                                   min="1" th:value="${modules.size() + 1}" required/>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="bi bi-plus me-1"></i>Ajouter le module
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+</body>
+</html>

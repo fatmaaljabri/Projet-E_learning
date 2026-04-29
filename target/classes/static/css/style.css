@@ -1,0 +1,88 @@
+/* ELearn FST — Custom Styles */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+}
+
+/* Cards */
+.cours-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.cours-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+}
+
+/* Progress bar */
+.progress {
+    border-radius: 8px;
+    background-color: #e9ecef;
+}
+.progress-bar {
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+/* Accordion */
+.accordion-button:not(.collapsed) {
+    background-color: #e8f0fe;
+    color: #1a56db;
+}
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.4em 0.8em;
+}
+
+/* Sidebar leçons */
+.choix-option {
+    border: 1.5px solid #dee2e6 !important;
+    border-radius: 8px;
+}
+.choix-option:has(input:checked) {
+    background-color: #e8f4fd;
+    border-color: #0d6efd !important;
+}
+
+/* Table */
+.table th {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #495057;
+}
+
+/* Boutons */
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}
+
+/* Stats cards */
+.card.bg-primary,
+.card.bg-success,
+.card.bg-info,
+.card.bg-warning {
+    border-radius: 12px;
+}
+
+/* Sticky sidebar */
+@media (max-width: 992px) {
+    .sticky-top { position: relative !important; top: 0 !important; }
+}
