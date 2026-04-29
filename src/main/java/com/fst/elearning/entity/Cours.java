@@ -30,7 +30,7 @@ public class Cours {
 
     private String imageUrl;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean actif = true;
 
     @Column(nullable = false, updatable = false)

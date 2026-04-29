@@ -1,10 +1,12 @@
 package com.fst.elearning.controller;
 
+import com.fst.elearning.dto.ProgressionDTO;
 import com.fst.elearning.entity.*;
 import com.fst.elearning.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +40,16 @@ public class ApprenantController {
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         Utilisateur apprenant = utilisateurService.getUtilisateurConnecte();
+        List<ProgressionDTO> progressions = progressionService.getProgressionsPourApprenant(apprenant);
+
+        // ✅ CORRECTION : calcul fait en Java, pas dans Thymeleaf (les lambdas ne sont pas supportées)
+        long coursTermines = progressions.stream()
+                .filter(p -> "TERMINE".equals(p.getStatut()))
+                .count();
+
         model.addAttribute("apprenant", apprenant);
-        model.addAttribute("progressions", progressionService.getProgressionsPourApprenant(apprenant));
+        model.addAttribute("progressions", progressions);
+        model.addAttribute("coursTermines", coursTermines); // ✅ variable ajoutée
         model.addAttribute("resultats", quizService.getResultatsApprenant(apprenant));
         return "apprenant/dashboard";
     }
