@@ -150,9 +150,10 @@ public class FormateurController {
 
     @PostMapping("/modules/{moduleId}/lecons/nouveau")
     public String creerLecon(@PathVariable Long moduleId,
-                             @ModelAttribute Lecon lecon) {
+                             @ModelAttribute Lecon lecon,
+                             @RequestParam(required = false) MultipartFile pdf) throws IOException {
 
-        leconService.creer(lecon, moduleId);
+        leconService.creer(lecon, pdf, moduleId);
         return "redirect:/formateur/modules/" + moduleId + "/lecons";
     }
 

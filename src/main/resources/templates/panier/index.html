@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Panier</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h2 class="fw-bold text-white mb-0"><i class="bi bi-bag me-2"></i>Panier</h2>
+            <form th:if="${!items.isEmpty()}" th:action="@{/panier/clear}" method="post">
+                <button class="btn btn-outline-light btn-sm" type="submit">
+                    <i class="bi bi-trash me-1"></i>Vider
+                </button>
+            </form>
+        </div>
+
+        <div th:if="${items.isEmpty()}" class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="text-muted mb-2"><i class="bi bi-inbox fs-1"></i></div>
+                <h5 class="fw-bold text-dark mb-1">Votre panier est vide</h5>
+                <p class="text-muted mb-3">Ajoutez des cours premium depuis le catalogue.</p>
+                <a th:href="@{/catalogue}" class="btn btn-primary">
+                    <i class="bi bi-grid-3x3-gap me-1"></i>Voir le catalogue
+                </a>
+            </div>
+        </div>
+
+        <div th:unless="${items.isEmpty()}" class="row g-3">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item p-3 d-flex align-items-center gap-3" th:each="it : ${items}">
+                            <img th:src="${it.imageUrl != null ? it.imageUrl : 'https://placehold.co/120x72/111827/ffffff?text=Cours'}"
+                                 alt="Cours" style="width:120px;height:72px;object-fit:cover;border-radius:10px;"/>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold text-dark" th:text="${it.titre}">Titre</div>
+                                <div class="text-muted small">Accès premium</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="fw-bold text-dark"
+                                     th:text="${#numbers.formatDecimal(it.prix, 1, 2)} + ' DT'">0.00 DT</div>
+                                <form th:action="@{/panier/remove/{id}(id=${it.coursId})}" method="post">
+                                    <button class="btn btn-link text-danger p-0 small" type="submit">Retirer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm sticky-top" style="top:90px;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Total</span>
+                            <span class="fw-bold text-dark" th:text="${#numbers.formatDecimal(total, 1, 2)} + ' DT'">0.00 DT</span>
+                        </div>
+                        <a th:href="@{/paiement/checkout}" class="btn btn-primary w-100 btn-lg">
+                            <i class="bi bi-credit-card me-2"></i>Passer au paiement
+                        </a>
+                        <a th:href="@{/catalogue}" class="btn btn-outline-secondary w-100 mt-2">
+                            Continuer les achats
+                        </a>
+                        <div class="text-muted small mt-3">
+                            <i class="bi bi-shield-lock me-1"></i>Paiement simulé (démo). Vous pourrez brancher Stripe/PayPal ensuite.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
+

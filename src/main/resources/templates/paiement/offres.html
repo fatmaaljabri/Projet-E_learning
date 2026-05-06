@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Offres</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h1 class="fw-bold text-white">Offres & Paiement</h1>
+            <p class="text-white-50 mb-0">Choisissez une offre puis passez au paiement en quelques secondes.</p>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Mensuel</h5>
+                        <div class="display-6 fw-bold text-dark mb-2">29 DT</div>
+                        <div class="text-muted small mb-3">Accès premium pendant 30 jours</div>
+                        <a th:href="@{/panier}" class="btn btn-outline-primary w-100">Voir panier</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Annuel</h5>
+                        <div class="display-6 fw-bold text-dark mb-2">249 DT</div>
+                        <div class="text-muted small mb-3">Meilleure valeur (12 mois)</div>
+                        <a th:href="@{/paiement/checkout}" class="btn btn-primary w-100">Payer</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark">Entreprise</h5>
+                        <div class="display-6 fw-bold text-dark mb-2">Sur devis</div>
+                        <div class="text-muted small mb-3">Équipes, reporting, support</div>
+                        <a th:href="@{/catalogue}" class="btn btn-outline-secondary w-100">Découvrir</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="fw-bold text-dark mb-1">Pourquoi un paiement ?</h5>
+                        <p class="text-muted mb-0">
+                            Les cours premium financent la qualité: supports PDF, quiz, suivi de progression,
+                            et fonctionnalités de traduction.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a th:href="@{/paiement/checkout}" class="btn btn-dark">
+                            <i class="bi bi-credit-card me-2"></i>Aller au checkout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

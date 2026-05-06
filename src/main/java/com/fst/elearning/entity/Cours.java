@@ -2,6 +2,7 @@ package com.fst.elearning.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,10 @@ public class Cours {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Niveau niveau;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    @Builder.Default
+    private BigDecimal prix = BigDecimal.ZERO;
 
     private String imageUrl;
 

@@ -51,6 +51,8 @@ public class CoursController {
     public String detailCours(@PathVariable Long id, Model model, Authentication auth) {
         Cours cours = coursService.findById(id);
         model.addAttribute("cours", cours);
+        model.addAttribute("autresCoursFormateur",
+                coursService.getDerniersCoursParFormateur(cours.getFormateur(), 4));
 
         if (auth != null && auth.isAuthenticated() && !auth.getPrincipal().equals("anonymousUser")) {
             Utilisateur user = utilisateurService.getUtilisateurConnecte();

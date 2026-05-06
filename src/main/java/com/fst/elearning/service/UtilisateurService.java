@@ -23,10 +23,47 @@ public class UtilisateurService {
             .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
     }
 
-    public Utilisateur inscrire(Utilisateur utilisateur) {
+    public void validerDonneesInscription(Utilisateur utilisateur) {
+        if (utilisateur.getEmail() == null || utilisateur.getEmail().isBlank()) {
+            throw new RuntimeException("Email obligatoire");
+        }
         if (utilisateurRepository.existsByEmail(utilisateur.getEmail())) {
             throw new RuntimeException("Email déjà utilisé");
         }
+
+        String mdp = utilisateur.getMotDePasse() != null ? utilisateur.getMotDePasse() : "";
+        String email = utilisateur.getEmail() != null ? utilisateur.getEmail() : "";
+        String nom = utilisateur.getNom() != null ? utilisateur.getNom() : "";
+        String prenom = utilisateur.getPrenom() != null ? utilisateur.getPrenom() : "";
+
+        if (mdp.length() < 8) {
+            throw new RuntimeException("Mot de passe trop court (minimum 8 caractères)");
+        }
+        boolean hasLetter = mdp.chars().anyMatch(Character::isLetter);
+        boolean hasDigit = mdp.chars().anyMatch(Character::isDigit);
+        if (!hasLetter || !hasDigit) {
+            throw new RuntimeException("Mot de passe invalide (doit contenir au moins une lettre et un chiffre)");
+        }
+        String mdpLower = mdp.toLowerCase();
+        if (mdpLower.equals(email.toLowerCase())) {
+            throw new RuntimeException("Le mot de passe doit être différent de l'email");
+        }
+        if (!nom.isBlank() && mdpLower.equals(nom.toLowerCase())) {
+            throw new RuntimeException("Le mot de passe doit être différent du nom");
+        }
+        if (!prenom.isBlank() && mdpLower.equals(prenom.toLowerCase())) {
+            throw new RuntimeException("Le mot de passe doit être différent du prénom");
+        }
+        String nomComplet = (prenom + " " + nom).trim().toLowerCase();
+        if (!nomComplet.isBlank() && mdpLower.equals(nomComplet)) {
+            throw new RuntimeException("Le mot de passe doit être différent du nom d'utilisateur");
+        }
+    }
+
+    public Utilisateur inscrire(Utilisateur utilisateur) {
+        validerDonneesInscription(utilisateur);
+        // Ancien flux: compte inactif. Conservé pour compatibilité.
+        utilisateur.setActif(false);
         utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
         return utilisateurRepository.save(utilisateur);
     }

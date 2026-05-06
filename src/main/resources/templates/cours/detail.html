@@ -64,11 +64,21 @@
                     <div class="mb-3">
                         <span class="badge bg-primary fs-6" th:text="${cours.niveau}">Niveau</span>
                     </div>
+                    <div class="mb-3">
+                        <div class="fw-bold fs-3 text-dark"
+                             th:text="${cours.prix != null and cours.prix > 0} ? (${#numbers.formatDecimal(cours.prix, 1, 2)} + ' DT') : 'Gratuit'">Gratuit</div>
+                        <div class="text-muted small" th:if="${cours.prix != null and cours.prix > 0}">Accès premium</div>
+                    </div>
                     <ul class="list-unstyled text-start mb-3">
                         <li class="mb-2">
                             <i class="bi bi-person-badge me-2 text-primary"></i>
                             <strong>Formateur :</strong>
                             <span th:text="${cours.formateur.nomComplet}">Nom</span>
+                        </li>
+                        <li class="mb-2" th:if="${cours.formateur.specialite != null}">
+                            <i class="bi bi-award me-2 text-primary"></i>
+                            <strong>Spécialité :</strong>
+                            <span th:text="${cours.formateur.specialite}">Spécialité</span>
                         </li>
                         <li class="mb-2">
                             <i class="bi bi-collection me-2 text-primary"></i>
@@ -92,6 +102,23 @@
                         </li>
                     </ul>
 
+                    <div class="text-start mb-3">
+                        <div class="fw-bold text-dark mb-1">À propos du formateur</div>
+                        <div class="text-muted small"
+                             th:text="${cours.formateur.bio != null ? cours.formateur.bio : 'Formateur Dourousi Academy. Accompagnement et pédagogie orientée projet.'}">
+                            Bio
+                        </div>
+                        <div class="fw-bold text-dark mt-3 mb-2">Autres cours</div>
+                        <div th:if="${autresCoursFormateur != null}">
+                            <a class="d-block small text-decoration-none mb-1"
+                               th:each="c2 : ${autresCoursFormateur}"
+                               th:href="@{/cours/{id}/detail(id=${c2.id})}"
+                               th:text="${c2.titre}">
+                                Cours
+                            </a>
+                        </div>
+                    </div>
+
                     <!-- Bouton selon statut -->
                     <div th:if="${estInscrit}">
                         <a th:href="@{/apprenant/cours/{id}(id=${cours.id})}"
@@ -99,12 +126,22 @@
                             <i class="bi bi-play-fill me-2"></i>Continuer le cours
                         </a>
                     </div>
-                    <div th:if="${!estInscrit}" sec:authorize="hasRole('APPRENANT')">
+                    <div th:if="${!estInscrit and (cours.prix == null or cours.prix <= 0)}" sec:authorize="hasRole('APPRENANT')">
                         <form th:action="@{/apprenant/inscrire/{id}(id=${cours.id})}" method="post">
                             <button type="submit" class="btn btn-primary w-100 btn-lg">
                                 <i class="bi bi-plus-circle me-2"></i>S'inscrire gratuitement
                             </button>
                         </form>
+                    </div>
+                    <div th:if="${!estInscrit and (cours.prix != null and cours.prix > 0)}">
+                        <form th:action="@{/panier/add/{id}(id=${cours.id})}" method="post" class="mb-2">
+                            <button type="submit" class="btn btn-primary w-100 btn-lg">
+                                <i class="bi bi-bag-plus me-2"></i>Ajouter au panier
+                            </button>
+                        </form>
+                        <a th:href="@{/paiement/checkout}" class="btn btn-outline-dark w-100">
+                            <i class="bi bi-credit-card me-2"></i>Payer maintenant
+                        </a>
                     </div>
                     <div sec:authorize="isAnonymous()">
                         <a th:href="@{/auth/login}" class="btn btn-outline-primary w-100 btn-lg">

@@ -57,6 +57,13 @@
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label fw-semibold">Prix (DT)</label>
+                    <input type="number" class="form-control" th:field="*{prix}"
+                           min="0" step="0.01" placeholder="0.00"/>
+                    <small class="text-muted">Mettez 0 pour un cours gratuit.</small>
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label fw-semibold">Image de couverture</label>
                     <input type="file" class="form-control" name="image" accept="image/*"/>
                     <div th:if="${cours.imageUrl != null}" class="mt-2">

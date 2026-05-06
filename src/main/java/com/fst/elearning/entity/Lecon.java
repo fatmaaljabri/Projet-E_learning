@@ -20,6 +20,8 @@ public class Lecon {
     @Column(columnDefinition = "TEXT")
     private String contenu;
 
+    private String pdfUrl;
+
     @Column(nullable = false)
     private int ordre;
 

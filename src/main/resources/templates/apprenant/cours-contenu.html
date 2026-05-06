@@ -64,6 +64,43 @@
                         </small>
                     </div>
                     <div class="text-muted mb-3" th:text="${lecon.contenu}">Contenu</div>
+
+                    <div th:if="${lecon.pdfUrl != null}" class="mb-3">
+                        <div class="d-flex flex-wrap gap-2">
+                            <button class="btn btn-outline-danger btn-sm" type="button"
+                                    data-bs-toggle="collapse"
+                                    th:attr="data-bs-target='#pdf' + ${lecon.id}">
+                                <i class="bi bi-file-earmark-pdf me-1"></i>Lire le PDF
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" type="button"
+                                    th:attr="data-lecon-id=${lecon.id}"
+                                    onclick="loadPdfText(this)">
+                                <i class="bi bi-fonts me-1"></i>Extraire le texte
+                            </button>
+                            <select class="form-select form-select-sm w-auto" th:attr="data-lang-for=${lecon.id}">
+                                <option value="fr">FR</option>
+                                <option value="en">EN</option>
+                                <option value="ar">AR</option>
+                            </select>
+                            <button class="btn btn-primary btn-sm" type="button"
+                                    th:attr="data-lecon-id=${lecon.id}"
+                                    onclick="translatePdfText(this)">
+                                <i class="bi bi-translate me-1"></i>Traduire
+                            </button>
+                        </div>
+
+                        <div class="collapse mt-2" th:id="'pdf' + ${lecon.id}">
+                            <div class="ratio ratio-16x9">
+                                <iframe th:src="${lecon.pdfUrl}" style="border:0;border-radius:12px;"></iframe>
+                            </div>
+                        </div>
+
+                        <div class="mt-2">
+                            <textarea class="form-control small" rows="5"
+                                      th:id="'pdfText' + ${lecon.id}"
+                                      placeholder="Texte extrait / traduit…"></textarea>
+                        </div>
+                    </div>
                     <form th:unless="${#lists.contains(leconsCompleteesIds, lecon.id)}"
                           th:action="@{/apprenant/lecon/{id}/complete(id=${lecon.id})}" method="post">
                         <input type="hidden" name="coursId" th:value="${cours.id}"/>
@@ -83,5 +120,46 @@
 </div>
 </div>
 </div>
+
+<script>
+    async function loadPdfText(btn) {
+        const id = btn.getAttribute('data-lecon-id');
+        const target = document.getElementById('pdfText' + id);
+        if (!id || !target) return;
+        target.value = 'Extraction en cours...';
+        try {
+            const res = await fetch('/lecons/' + id + '/pdf/text');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            target.value = await res.text();
+        } catch (e) {
+            target.value = 'Impossible d\\'extraire le texte (PDF manquant ou erreur serveur).';
+        }
+    }
+
+    async function translatePdfText(btn) {
+        const id = btn.getAttribute('data-lecon-id');
+        const target = document.getElementById('pdfText' + id);
+        const langSel = document.querySelector('[data-lang-for=\"' + id + '\"]');
+        if (!id || !target || !langSel) return;
+        const text = (target.value || '').trim();
+        if (!text) {
+            target.value = 'Veuillez d\\'abord extraire le texte.';
+            return;
+        }
+        const to = langSel.value || 'fr';
+        target.value = 'Traduction en cours...';
+        try {
+            const res = await fetch('/lecons/' + id + '/pdf/translate?to=' + encodeURIComponent(to), {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+                body: text
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            target.value = await res.text();
+        } catch (e) {
+            target.value = 'Traduction indisponible (vérifiez la connexion internet).';
+        }
+    }
+</script>
 </body>
 </html>

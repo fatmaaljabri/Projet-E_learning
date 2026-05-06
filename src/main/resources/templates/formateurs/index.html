@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Formateurs</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h1 class="fw-bold text-white"><i class="bi bi-person-badge me-2"></i>Nos formateurs</h1>
+            <p class="text-white-50 mb-0">Découvrez les profils, spécialités et parcours proposés.</p>
+        </div>
+
+        <div th:if="${formateurs.isEmpty()}" class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="text-muted mb-2"><i class="bi bi-inbox fs-1"></i></div>
+                <h5 class="fw-bold text-dark mb-1">Aucun formateur</h5>
+                <p class="text-muted mb-0">Ajoutez un compte formateur pour afficher la liste.</p>
+            </div>
+        </div>
+
+        <div class="row g-3" th:unless="${formateurs.isEmpty()}">
+            <div class="col-md-6 col-lg-4" th:each="f : ${formateurs}">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <img th:src="${f.photoUrl != null ? f.photoUrl : 'https://placehold.co/80x80/111827/ffffff?text=DA'}"
+                                 alt="Photo" style="width:64px;height:64px;border-radius:14px;object-fit:cover;"/>
+                            <div>
+                                <div class="fw-bold text-dark" th:text="${f.nomComplet}">Nom</div>
+                                <div class="text-muted small" th:text="${f.specialite != null ? f.specialite : 'Formateur'}">Spécialité</div>
+                                <div class="text-muted small"><i class="bi bi-envelope me-1"></i><span th:text="${f.email}">email</span></div>
+                            </div>
+                        </div>
+
+                        <p class="text-muted small mb-3"
+                           th:text="${f.bio != null ? f.bio : 'Formateur Dourousi Academy. Expertise pédagogique et accompagnement des apprenants.'}">
+                            Bio
+                        </p>
+
+                        <a th:href="@{/catalogue}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-grid-3x3-gap me-1"></i>Voir les cours
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body">
+                <h5 class="fw-bold text-dark mb-1">Exemples de parcours (inspirés “Google Career Certificates”)</h5>
+                <p class="text-muted mb-2">
+                    Tu peux ajouter des cours similaires dans l’espace formateur. Exemples:
+                </p>
+                <ul class="text-muted mb-0">
+                    <li>Google Data Analytics (fondamentaux, SQL, dashboards)</li>
+                    <li>Google UX Design (wireframes, prototypes, tests utilisateurs)</li>
+                    <li>Google IT Support (réseau, systèmes, dépannage)</li>
+                    <li>Digital Marketing (SEO, campagnes, analytics)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

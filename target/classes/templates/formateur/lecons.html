@@ -59,7 +59,7 @@
                 </div>
                 <div class="card-body">
                     <form th:action="@{/formateur/modules/{id}/lecons/nouveau(id=${module.id})}"
-                          method="post" th:object="${nouvelleLecon}">
+                          method="post" th:object="${nouvelleLecon}" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Titre de la leçon</label>
                             <input type="text" class="form-control" th:field="*{titre}"
@@ -69,6 +69,11 @@
                             <label class="form-label fw-semibold">Contenu</label>
                             <textarea class="form-control" th:field="*{contenu}" rows="4"
                                       placeholder="Contenu de la leçon..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Support PDF (optionnel)</label>
+                            <input type="file" class="form-control" name="pdf" accept="application/pdf"/>
+                            <small class="text-muted">Vous pourrez le lire et extraire le texte côté apprenant.</small>
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-6">

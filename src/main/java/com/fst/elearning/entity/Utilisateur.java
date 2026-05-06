@@ -29,6 +29,14 @@ public class Utilisateur {
     @Column(nullable = false)
     private Role role;
 
+    @Column(length = 120)
+    private String specialite;
+
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
+    private String photoUrl;
+
     private boolean actif = true;
 
     @OneToMany(mappedBy = "formateur", cascade = CascadeType.ALL)
@@ -38,7 +46,7 @@ public class Utilisateur {
     private List<Inscription> inscriptions;
 
     public enum Role {
-        ADMIN, FORMATEUR, APPRENANT
+        ADMIN, FORMATEUR, APPRENANT, PARENT
     }
 
     public String getNomComplet() {

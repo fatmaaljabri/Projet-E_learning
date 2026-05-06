@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Accueil</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+
+        <div class="hero-surface p-3 p-md-4 mb-4">
+            <div class="hero-gradient p-3 p-md-4">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-7">
+                        <span class="badge bg-dark-subtle text-dark border mb-2">Plateforme E‑Learning</span>
+                        <h1 class="fw-bold display-6 mb-2 text-dark">Apprenez. Progressez. Réussissez.</h1>
+                        <p class="text-muted mb-3">
+                            Dourousi Academy propose des cours pratiques, des quiz, et un suivi de progression.
+                            Découvrez nos parcours et choisissez l’offre qui vous convient.
+                        </p>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-primary btn-lg" th:href="@{/catalogue}">
+                                <i class="bi bi-grid-3x3-gap me-2"></i>Explorer le catalogue
+                            </a>
+                            <a class="btn btn-outline-secondary btn-lg" th:href="@{/panier}">
+                                <i class="bi bi-bag me-2"></i>Voir mon panier
+                            </a>
+                        </div>
+                        <div class="d-flex flex-wrap gap-3 mt-3 text-muted small">
+                            <span><i class="bi bi-shield-check me-1"></i>Paiement sécurisé</span>
+                            <span><i class="bi bi-translate me-1"></i>Lecture & traduction PDF</span>
+                            <span><i class="bi bi-lightning-charge me-1"></i>Accès rapide aux cours</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div id="homeCarousel" class="carousel slide rounded overflow-hidden shadow-sm" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="0" class="active"></button>
+                                <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="2"></button>
+                            </div>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="p-4 bg-white">
+                                        <h5 class="fw-bold text-dark mb-1"><i class="bi bi-stars me-2 text-primary"></i>Offres de paiement</h5>
+                                        <p class="text-muted mb-0">Choisissez une offre mensuelle ou annuelle, adaptée à votre rythme.</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="p-4 bg-white">
+                                        <h5 class="fw-bold text-dark mb-1"><i class="bi bi-file-earmark-pdf me-2 text-danger"></i>PDF intégrés</h5>
+                                        <p class="text-muted mb-0">Les leçons peuvent inclure des supports PDF lisibles directement dans la plateforme.</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="p-4 bg-white">
+                                        <h5 class="fw-bold text-dark mb-1"><i class="bi bi-geo-alt me-2 text-success"></i>Infos & lieu</h5>
+                                        <p class="text-muted mb-0">Ajoutez vos informations (lieu, contact, horaires) dans les slides d’accueil.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                                <span class="visually-hidden">Précédent</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                                <span class="visually-hidden">Suivant</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark mb-1">Essentiel</h5>
+                        <div class="text-muted small mb-2">Pour démarrer</div>
+                        <div class="display-6 fw-bold text-dark mb-2">0 DT</div>
+                        <ul class="text-muted small mb-3">
+                            <li>Accès aux cours gratuits</li>
+                            <li>Progression & quiz</li>
+                            <li>Support PDF (lecture)</li>
+                        </ul>
+                        <a th:href="@{/catalogue}" class="btn btn-outline-primary w-100">Voir les cours</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark mb-1">Pro</h5>
+                        <div class="text-muted small mb-2">Le plus choisi</div>
+                        <div class="display-6 fw-bold text-dark mb-2">29 DT</div>
+                        <ul class="text-muted small mb-3">
+                            <li>Accès aux cours premium</li>
+                            <li>PDF + extraction texte</li>
+                            <li>Traduction (EN/FR/AR)</li>
+                        </ul>
+                        <a th:href="@{/paiement/offres}" class="btn btn-primary w-100">Choisir Pro</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-dark mb-1">Entreprise</h5>
+                        <div class="text-muted small mb-2">Pour équipes</div>
+                        <div class="display-6 fw-bold text-dark mb-2">Sur devis</div>
+                        <ul class="text-muted small mb-3">
+                            <li>Gestion des groupes</li>
+                            <li>Reporting</li>
+                            <li>Support prioritaire</li>
+                        </ul>
+                        <a th:href="@{/paiement/offres}" class="btn btn-outline-secondary w-100">Nous contacter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="fw-bold text-dark mb-1">Besoin d’un background plus “professionnel” ?</h5>
+                        <p class="text-muted mb-0">
+                            Les sections d’accueil sont conçues comme des slides: vous pouvez y afficher des informations
+                            (lieu, contact, objectifs, nouveautés).
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a th:href="@{/catalogue}" class="btn btn-dark">
+                            <i class="bi bi-rocket-takeoff me-2"></i>Commencer maintenant
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

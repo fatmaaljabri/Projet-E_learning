@@ -49,10 +49,14 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Pages publiques
                 .requestMatchers("/", "/catalogue", "/cours/{id}/detail",
-                                 "/auth/**", "/css/**", "/js/**", "/uploads/**",
+                                 "/auth/**", "/css/**", "/js/**", "/img/**", "/uploads/**",
+                                 "/panier/**", "/paiement/offres", "/paiement/checkout", "/paiement/success",
                                  "/webjars/**").permitAll()
                 // Espace apprenant
                 .requestMatchers("/apprenant/**").hasRole("APPRENANT")
+                .requestMatchers("/lecons/**").hasRole("APPRENANT")
+                // Espace parent
+                .requestMatchers("/parent/**").hasRole("PARENT")
                 // Espace formateur
                 .requestMatchers("/formateur/**").hasRole("FORMATEUR")
                 // Espace admin

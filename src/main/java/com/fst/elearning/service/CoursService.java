@@ -41,6 +41,7 @@ public class CoursService {
 
     public Cours creer(Cours cours, MultipartFile image, Utilisateur formateur) throws IOException {
         cours.setFormateur(formateur);
+        if (cours.getPrix() == null) cours.setPrix(java.math.BigDecimal.ZERO);
         if (image != null && !image.isEmpty()) {
             cours.setImageUrl(fileStorageService.sauvegarderFichier(image));
         }
@@ -53,6 +54,7 @@ public class CoursService {
         cours.setDescription(coursModif.getDescription());
         cours.setCategorie(coursModif.getCategorie());
         cours.setNiveau(coursModif.getNiveau());
+        cours.setPrix(coursModif.getPrix());
         cours.setActif(coursModif.isActif());
         if (image != null && !image.isEmpty()) {
             if (cours.getImageUrl() != null) fileStorageService.supprimerFichier(cours.getImageUrl());
@@ -72,6 +74,11 @@ public class CoursService {
         return coursRepository.findByFormateurOrderByDateCreationDesc(formateur, pageable);
     }
 
+    public List<Cours> getDerniersCoursParFormateur(Utilisateur formateur, int size) {
+        Pageable pageable = PageRequest.of(0, size, Sort.by("dateCreation").descending());
+        return coursRepository.findByFormateurOrderByDateCreationDesc(formateur, pageable).getContent();
+    }
+
     public List<String> getAllCategories() {
         return coursRepository.findAllCategories();
     }
@@ -85,6 +92,7 @@ public class CoursService {
             .categorie(c.getCategorie())
             .niveau(c.getNiveau())
             .imageUrl(c.getImageUrl())
+            .prix(c.getPrix())
             .formateurNom(c.getFormateur().getNomComplet())
             .nombreModules(c.getModules() != null ? c.getModules().size() : 0)
             .nombreInscrits(c.getNombreInscrits())

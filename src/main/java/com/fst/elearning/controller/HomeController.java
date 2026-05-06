@@ -18,7 +18,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "redirect:/catalogue";
+        return "home/index";
     }
 
     @GetMapping("/dashboard")
@@ -32,6 +32,8 @@ public class HomeController {
             case ADMIN      -> "redirect:/admin/dashboard";
             case FORMATEUR  -> "redirect:/formateur/dashboard";
             case APPRENANT  -> "redirect:/apprenant/dashboard";
+            case PARENT     -> "redirect:/parent/dashboard";
+            default         -> "redirect:/catalogue";
         };
     }
 }
