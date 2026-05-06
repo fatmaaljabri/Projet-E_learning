@@ -1,5 +1,4 @@
 package com.fst.elearning.config;
-
 import com.fst.elearning.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,6 +51,10 @@ public class SecurityConfig {
                                  "/auth/**", "/css/**", "/js/**", "/img/**", "/uploads/**",
                                  "/panier/**", "/paiement/offres", "/paiement/checkout", "/paiement/success",
                                  "/webjars/**").permitAll()
+                // Quiz (accessible aux apprenants et formateurs)
+                .requestMatchers("/quiz/**").hasAnyRole("APPRENANT", "FORMATEUR", "ADMIN")
+                // API Quiz
+                .requestMatchers("/api/quiz/**").hasAnyRole("APPRENANT", "FORMATEUR", "ADMIN")
                 // Espace apprenant
                 .requestMatchers("/apprenant/**").hasRole("APPRENANT")
                 .requestMatchers("/lecons/**").hasRole("APPRENANT")
@@ -81,7 +84,6 @@ public class SecurityConfig {
             .exceptionHandling(ex -> ex
                 .accessDeniedPage("/auth/access-denied")
             );
-
         return http.build();
     }
 }
